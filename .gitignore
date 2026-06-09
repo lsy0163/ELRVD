@@ -1,0 +1,39 @@
+# local environments and caches
+.conda/
+__pycache__/
+*.pyc
+*.egg
+*.egg-info/
+build/
+dist/
+
+# data and generated outputs
+inference/data/
+data/
+samples/
+results/
+outputs/
+*.raw
+*.dng
+*.npy
+*.npz
+*.png
+*.mp4
+*.avi
+*.mov
+*.zip
+*.tar.gz
+
+# checkpoints: keep bundled inference checkpoints only
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.safetensors
+!inference/models/**/*.pth
+
+# editor files
+.vscode/
+.idea/
+.ipynb_checkpoints/
+.DS_Store

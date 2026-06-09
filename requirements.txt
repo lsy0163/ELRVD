@@ -1,0 +1,9 @@
+opencv-python==4.10.0.84
+scikit-image==0.19.3
+rawpy==0.18.1
+einops==0.6.1
+tqdm==4.66.5
+PyYAML==6.0.1
+tensorboardX==2.6.2.2
+torchprofile==0.0.4
+git+https://github.com/cheind/pytorch-debayer@a910a9e3839c5947c7659c9e0114562b6e2b253e
