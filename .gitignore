@@ -23,6 +23,8 @@ outputs/
 *.mov
 *.zip
 *.tar.gz
+# documentation images are tracked (must come after *.png)
+!docs/images/*.png
 
 # checkpoints: keep bundled inference checkpoints only
 *.pth

@@ -1,5 +1,12 @@
 # Setup
 
+## Requirements
+
+- **Linux with an NVIDIA GPU is required.** Inference hard-requires CUDA, and the DCNv2 deformable convolution extension is CUDA-only — macOS and CPU-only machines are not supported.
+- NVIDIA driver compatible with CUDA 11.3 (the pinned `cudatoolkit` version).
+- `nvcc` must be available when building DCNv2.
+- The pinned stack (Python 3.7 / PyTorch 1.12 / cu113) does not support recent GPU architectures (e.g. RTX 40-series, sm_89+). On newer GPUs, upgrade `pytorch`/`cudatoolkit` together and rebuild DCNv2.
+
 Create the conda environment:
 
 ```bash
@@ -28,8 +35,8 @@ export ELRVD_DCNV2_PATH=/path/to/DCNv2_latest
 Expected checkpoint paths:
 
 ```text
-inference/models/denoiser/model_epoch500.pth
-inference/models/isp/model_epoch770.pth
+inference/models/denoiser/model_epoch500.pth   # used by inference.py
+inference/models/isp/model_epoch770.pth        # used by training scripts only (frozen sRGB-loss module)
 ```
 
 The denoiser path can be overridden:
