@@ -12,7 +12,7 @@ REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 INFERENCE_SCRIPT="${REPO_DIR}/inference.py"
 MODEL_PATH="${REPO_DIR}/inference/models/denoiser/model_epoch500.pth"
 
-INPUT_ROOT="${INPUT_ROOT:-/database2/iyj0121/ReCRVD_sample/ReCRVD_raw}"
+INPUT_ROOT="${INPUT_ROOT:-./data/ReCRVD_raw}"
 
 HEIGHT=1080
 WIDTH=1920

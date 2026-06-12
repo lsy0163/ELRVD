@@ -2,6 +2,14 @@
 
 The inference pipeline expects a sequence of 16-bit Bayer RAW files.
 
+## Limitations
+
+- 16-bit single-channel Bayer RAW only (read as raw `uint16`); no DNG/TIFF/8-bit/RGB.
+- RGGB Bayer layout only. The model packs input as RGGB; `--debayer_layout` only changes PNG visualization, not the model input.
+- Height and width must be even.
+- Input must be at least ~2× `--patch_size` per side (default patch 256 → min ~512×512); reduce `--patch_size` for smaller frames.
+- `height`, `width`, `black_level`, `white_level` are passed as arguments, not read from the file, and must match the data exactly.
+
 ## Required metadata
 
 For each dataset or scene, set:

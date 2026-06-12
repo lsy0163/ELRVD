@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="${ROOT:-/database2/iyj0121/ReCRVD_sample/ELRVD_png}"
+ROOT="${ROOT:-./data/ELRVD_png}"
 FPS="${FPS:-10}"
 CRF="${CRF:-18}"
 PRESET="${PRESET:-medium}"

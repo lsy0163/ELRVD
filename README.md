@@ -1,6 +1,6 @@
 # ELRVD: Extreme Low-light RAW Video Denoising with RViDeNet-ECBAM
 
-This repository contains the inference, visualization, and reference training code for a capstone project on **extreme low-light RAW video denoising**. The core model is **RViDeNet-ECBAM**, a modified [RViDeNet](https://github.com/cao-cong/RViDeNet) that replaces the CBAM attention block with ECBAM (channel attention + Enhanced Spatial Attention) to better separate globally distributed low-light noise from real structure.
+This repository contains the inference and visualization code for a capstone project on **extreme low-light RAW video denoising**. The core model is **RViDeNet-ECBAM**, a modified [RViDeNet](https://github.com/cao-cong/RViDeNet) that replaces the CBAM attention block with ECBAM (channel attention + Enhanced Spatial Attention) to better separate globally distributed low-light noise from real structure.
 
 The model takes 3 consecutive noisy Bayer RAW frames and outputs a denoised RAW frame for the center frame, using temporal information from neighboring frames:
 
@@ -51,15 +51,13 @@ Evaluated on a self-captured 0.1 lux IMX327 RAW validation set and ReCRVD (exter
 ```text
 inference.py                  # main inference entry point (tiled full-resolution RAW inference)
 raw_to_debayer_png.py         # RAW Bayer -> PNG visualization helper
-models.py                     # RViDeNet / RViDeNet-ECBAM and comparison model definitions
+models.py                     # RViDeNet / RViDeNet-ECBAM model definitions
 models_util.py                # building blocks shared by models.py
-video_denoising_models.py     # FastDVDNet and other sRGB comparison models
 utils.py                      # tiled inference and utility functions
 modules/cbam.py               # CBAM and ECBAM (ESA) attention blocks
 modules/DCNv2_latest/         # DCNv2 CUDA extension source (deformable alignment)
 inference/models/             # bundled inference checkpoints
 scripts/                      # batch inference, visualization, and video conversion scripts
-train/                        # reference training scripts (3-stage strategy, see train/README.md)
 docs/                         # data format and usage notes
 ```
 
@@ -102,6 +100,16 @@ python inference.py --model_path /path/to/model_epoch500.pth ...
 ## Data Format
 
 Input RAW frames are expected as 16-bit Bayer RAW files. The frame size, black level, white level, and Bayer layout must match the dataset (e.g. IMX327: 1920×1080, black level 240, white level 4095, RGGB).
+
+### Input requirements and limitations
+
+The tiled pipeline handles arbitrary resolutions, but the following constraints apply:
+
+- **16-bit single-channel Bayer RAW only.** Frames are read as raw `uint16` (`height × width`). Already-demosaiced RGB, 8-bit, or container formats (DNG/TIFF) are not supported — pass the planar Bayer data directly.
+- **RGGB Bayer layout only.** The model packs input as RGGB and was fine-tuned on an RGGB (IMX327) sensor. The `--debayer_layout` argument only affects PNG *visualization*, **not** the model input packing, so non-RGGB sensors (GBRG/BGGR/GRBG) will not be denoised correctly without re-packing.
+- **Even height and width.** Bayer packing splits the frame into 2×2 color planes, so odd dimensions are not supported (true for essentially all Bayer sensors).
+- **Minimum size depends on `--patch_size`.** Tiling operates on the packed (half-resolution) frame, so with the default `--patch_size 256` the input RAW must be at least ~512×512. For smaller frames, reduce `--patch_size` accordingly.
+- **Correct `--black_level` / `--white_level` / `--height` / `--width` are required.** These are not read from the file; a mismatch produces wrong normalization or a reshape error.
 
 Example noisy input structure:
 
@@ -146,20 +154,24 @@ scripts/png_to_mp4.sh   --png_dir /path/to/png_frames   --output_mp4 /path/to/ou
 
 ## Training
 
-Training follows a 3-stage strategy (see [train/README.md](train/README.md) for the script-to-stage mapping):
+Training code is **not** released in this repository. The final fine-tuning
+stage relies on a self-built extreme-low-light RAW dataset that is the lab's
+private, non-public dataset, so the training scripts and the associated data
+pipeline are withheld. This repository therefore focuses on inference and
+visualization with the released checkpoint.
+
+For reference, the model was trained with a 3-stage strategy:
 
 1. **Pre-denoising module pretraining** — synthetic noisy-clean pairs from SID clean RAW images; the module is frozen afterwards and used only to guide deformable alignment offsets.
 2. **RViDeNet pretraining** — synthetic RAW video from MOTChallenge sRGB videos (unprocessing + Poisson-Gaussian noise), RAW reconstruction loss only.
-3. **Sequential fine-tuning** — CRVD (GBRG, lr 1e-5) first, then the self-captured 0.1 lux IMX327 dataset (RGGB, lr 1e-6), with RAW reconstruction + temporal consistency loss.
-
-Scripts may require dataset paths and experiment settings to be adjusted before use.
+3. **Sequential fine-tuning** — CRVD (GBRG) first, then the self-captured 0.1 lux IMX327 dataset (RGGB), with a layer-wise learning rate (backbone 1e-6 / recon trunk, attention, output conv 1e-5) and a loss combining RAW reconstruction, temporal consistency, and an auxiliary sRGB term.
 
 ## Datasets
 
 | Dataset | Role | Notes |
 |---|---|---|
 | [CRVD](https://github.com/cao-cong/RViDeNet) | Fine-tuning (stage 3-1) | 11 indoor scenes × 5 ISO levels, GBRG |
-| Self-captured ELRVD RAW | Fine-tuning + validation (stage 3-2) | 0.1 lux, 12 scenes × 60 frames, IMX327 RGGB, GT = ~100-shot average |
+| Self-captured ELRVD RAW *(private, not released)* | Fine-tuning + validation (stage 3-2) | 0.1 lux, 12 scenes × 60 frames, IMX327 RGGB, GT = ~100-shot average; lab-built dataset, not publicly available |
 | [ReCRVD](https://github.com/cao-cong/RViDeformer) | External evaluation | 120 scenes, generalization test |
 
 ## Acknowledgements

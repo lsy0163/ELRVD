@@ -11,8 +11,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CONVERTER="${REPO_DIR}/raw_to_debayer_png.py"
 
-INPUT_ROOT="${INPUT_ROOT:-/database2/iyj0121/ReCRVD_sample/ELRVD_raw}"
-OUTPUT_ROOT="${OUTPUT_ROOT:-/database2/iyj0121/ReCRVD_sample/ELRVD_png}"
+INPUT_ROOT="${INPUT_ROOT:-./data/ELRVD_raw}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-./data/ELRVD_png}"
 
 GAIN=1.0
 WHITE_LEVEL=4095

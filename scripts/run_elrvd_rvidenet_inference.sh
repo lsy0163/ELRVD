@@ -12,7 +12,7 @@ REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 INFERENCE_SCRIPT="${REPO_DIR}/inference.py"
 MODEL_PATH="${REPO_DIR}/inference/models/denoiser/model_epoch500.pth"
 
-INPUT_ROOT="${INPUT_ROOT:-/database2/iyj0121/ReCRVD_sample/ELRVD_raw}"
+INPUT_ROOT="${INPUT_ROOT:-./data/ELRVD_raw}"
 
 GPU_ID="${GPU_ID:-0}"
 GAIN=3.0
