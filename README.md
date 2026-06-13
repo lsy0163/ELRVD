@@ -8,6 +8,12 @@ The model takes 3 consecutive noisy Bayer RAW frames and outputs a denoised RAW 
 noisy Bayer RAW frames -> RViDeNet-ECBAM inference -> denoised RAW frames -> debayer PNG -> MP4 visualization
 ```
 
+## Demo
+
+![Noisy vs. Ours comparison](docs/images/scene7_giraffe_comparison.gif)
+
+Side-by-side on a 0.1 lux self-captured scene — **left: noisy input, right: our denoised output**. The noisy stream is dominated by low-light noise that buries object boundaries, while the denoised stream recovers structure and is temporally stable.
+
 ## Architecture
 
 ![RViDeNet-ECBAM architecture](docs/images/architecture_rvidenet_ecbam.png)
