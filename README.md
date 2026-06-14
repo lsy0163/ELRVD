@@ -16,7 +16,7 @@ Side-by-side on a 0.1 lux self-captured scene — **left: noisy input, right: ou
 
 ## Architecture
 
-![RViDeNet-ECBAM architecture](docs/images/architecture_rvidenet_ecbam.png)
+![RViDeNet-ECBAM architecture](docs/images/fig_arch_modern_1.png)
 
 A frozen pre-denoising module guides deformable alignment offsets; the input is packed into 4 Bayer sub-frames (R/G1/G2/B) that go through shared-weight Alignment → Non-Local Attention → Temporal Fusion paths, followed by Spatial Fusion, the **ECBAM** attention block (our modification: channel attention + ESA), and a global residual connection to produce the denoised RAW frame.
 
