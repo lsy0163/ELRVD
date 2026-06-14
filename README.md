@@ -1,4 +1,4 @@
-# ELRVD: Extreme Low-light RAW Video Denoising with RViDeNet-ECBAM
+# R2R-RViDeNet: Raw to Raw RViDeNet
 
 This repository contains the inference and visualization code for a capstone project on **extreme low-light RAW video denoising**. The core model is **RViDeNet-ECBAM**, a modified [RViDeNet](https://github.com/cao-cong/RViDeNet) that replaces the CBAM attention block with ECBAM (channel attention + Enhanced Spatial Attention) to better separate globally distributed low-light noise from real structure.
 
